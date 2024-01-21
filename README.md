@@ -1,4 +1,8 @@
-# MSONEFRAMERS!
+<p align="center">
+  <img width="70" height="70" src="https://github.com/s2kshare/MSONEFRAMERS/blob/main/img/MSGANGdark.png" />
+</p>
+
+<h1 align="center">MSONEFRAMERS!</h1>
 
 ### Gadies and Lentlemen, I bring you MSONEFRAMERS!
 > The swiss army knife of creating one frame adjustment layers with fixed presets
