@@ -4,10 +4,177 @@
         <meta charset="utf-8" />
         <link rel="stylesheet" href="./css/output.css" />
         <link rel="stylesheet" href="./css/styles.css" />
+        <link rel="stylesheet" href="./css/scrollbar.css" />
+        <script src="./js/jquery.min.js"></script>
         <title>MSOneFramers</title>
+        <style>
+            @font-face {
+                font-family: "Poppins";
+                src: url(./fonts/Poppins-Regular.ttf);
+                font-weight: normal;
+            }
+
+            @font-face {
+                font-family: "Poppins";
+                src: url(./fonts/Poppins-Bold.ttf);
+                font-weight: bold;
+            }
+
+            @font-face {
+                font-family: "Poppins";
+                src: url(./fonts/Poppins-Light.ttf);
+                font-weight: lighter;
+            }
+
+            * {
+                color: white;
+                font-family: "Poppins", sans-serif;
+                font-weight: lighter;
+                font-size: 2.5vw;
+            }
+
+            #creator {
+                text-align: center;
+            }
+
+            tbody tr {
+                cursor: pointer;
+                transition: 0.2s ease all;
+                background-color: transparent;
+            }
+
+            tbody tr:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+
+            .selected {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+        </style>
     </head>
-    <body scroll="no">
-        <script src="js/libs/CSInterface.js"></script>
-        <script src="js/main.js"></script>
+    <body class="h-screen w-screen overflow-x-hidden">
+        <div class="container max-w-full h-full flex">
+            <div
+                class="container grid hover:cursor-pointer"
+                style="flex: 1"
+                id="execute"
+            >
+                <div class="container w-full h-full z-10 grid" id="img-wrapper">
+                    <img
+                        id="mslogo"
+                        class="justify-self-center self-center"
+                        width="75px"
+                        height="75px"
+                        src="./img/MSGANG.png"
+                        alt="MS Logo"
+                    />
+                    <svg
+                        id="checklogo"
+                        class="h-1/2 w-1/2 justify-self-center self-center"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                        fill="#FFF"
+                        style="display: none"
+                    >
+                        <path
+                            d="M362.6 192.9L345 174.8c-.7-.8-1.8-1.2-2.8-1.2-1.1 0-2.1.4-2.8 1.2l-122 122.9-44.4-44.4c-.8-.8-1.8-1.2-2.8-1.2-1 0-2 .4-2.8 1.2l-17.8 17.8c-1.6 1.6-1.6 4.1 0 5.7l56 56c3.6 3.6 8 5.7 11.7 5.7 5.3 0 9.9-3.9 11.6-5.5h.1l133.7-134.4c1.4-1.7 1.4-4.2-.1-5.7z"
+                        />
+                    </svg>
+                </div>
+            </div>
+            <div
+                class="container h-full overflow-y-scroll overflow-x-hidden"
+                style="flex: 3"
+            >
+                <table class="table-auto w-full h-full">
+                    <thead>
+                        <tr>
+                            <th class="text-left" style="font-weight: bold">
+                                Preset
+                            </th>
+                            <th style="font-weight: bold">Creator</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="1" class="selected">
+                            <td>1. Invert</td>
+                            <td id="creator">s2k</td>
+                        </tr>
+                        <tr id="2">
+                            <td>2. Mosaic</td>
+                            <td id="creator">s2k</td>
+                        </tr>
+                        <tr id="3">
+                            <td>3. Horizontal Directional Blur</td>
+                            <td id="creator">s2k</td>
+                        </tr>
+                        <tr id="4">
+                            <td>4. Scanlines [Sapphire]</td>
+                            <td id="creator">s2k</td>
+                        </tr>
+                        <tr id="5">
+                            <td>5. LED [BCC]</td>
+                            <td id="creator">s2k</td>
+                        </tr>
+                        <tr id="6">
+                            <td>6. Gamma Horizontal Blur [BCC]</td>
+                            <td id="creator">s2k</td>
+                        </tr>
+                        <tr id="7">
+                            <td>7. Minimax Horizontal Offset [BCC]</td>
+                            <td id="creator">s2k</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+            // Handling Item Switch in Table
+            document.addEventListener("DOMContentLoaded", function () {
+                var rows = document.querySelectorAll("tbody tr");
+
+                rows.forEach(function (row) {
+                    row.addEventListener("click", function () {
+                        rows.forEach(function (r) {
+                            r.classList.remove("selected");
+                        });
+                        // Add Selected Styling
+                        row.classList.add("selected");
+                    });
+                });
+
+                // Get the elements
+                var executeElement = document.getElementById("execute");
+                var msLogoElement = document.getElementById("mslogo");
+                var checkLogoElement = document.getElementById("checklogo");
+
+                // Add event listeners for hover
+                executeElement.addEventListener("mouseenter", function () {
+                    msLogoElement.style.display = "none";
+                    checkLogoElement.style.display = "block";
+                });
+
+                executeElement.addEventListener("mouseleave", function () {
+                    msLogoElement.style.display = "block";
+                    checkLogoElement.style.display = "none";
+                });
+            });
+
+            // SVG Animation
+            // $("#execute").hover(
+            //     function () {
+            //         $("#mslogo").hide();
+            //         $("#checklogo").show();
+            //     },
+            //     function () {
+            //         $("#mslogo").show();
+            //         $("#checklogo").hide();
+            //     }
+            // );
+        </script>
+
+        <script src="./js/libs/CSInterface.js"></script>
+        <script src="./js/main.js"></script>
     </body>
 </html>

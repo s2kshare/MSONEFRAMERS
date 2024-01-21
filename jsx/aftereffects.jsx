@@ -1,22 +1,116 @@
-﻿"object"!=typeof JSON&&(JSON={}),function(){"use strict";var rx_one=/^[\],:{}\s]*$/,rx_two=/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,rx_three=/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,rx_four=/(?:^|:|,)(?:\s*\[)+/g,rx_escapable=/[\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,rx_dangerous=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta,rep;function f(t){return t<10?"0"+t:t}function this_value(){return this.valueOf()}function quote(t){return rx_escapable.lastIndex=0,rx_escapable.test(t)?'"'+t.replace(rx_escapable,function(t){var e=meta[t];return"string"==typeof e?e:"\\u"+("0000"+t.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+t+'"'}function str(t,e){var r,n,o,u,f,a=gap,i=e[t];switch(i&&"object"==typeof i&&"function"==typeof i.toJSON&&(i=i.toJSON(t)),"function"==typeof rep&&(i=rep.call(e,t,i)),typeof i){case"string":return quote(i);case"number":return isFinite(i)?String(i):"null";case"boolean":case"null":return String(i);case"object":if(!i)return"null";if(gap+=indent,f=[],"[object Array]"===Object.prototype.toString.apply(i)){for(u=i.length,r=0;r<u;r+=1)f[r]=str(r,i)||"null";return o=0===f.length?"[]":gap?"[\n"+gap+f.join(",\n"+gap)+"\n"+a+"]":"["+f.join(",")+"]",gap=a,o}if(rep&&"object"==typeof rep)for(u=rep.length,r=0;r<u;r+=1)"string"==typeof rep[r]&&(o=str(n=rep[r],i))&&f.push(quote(n)+(gap?": ":":")+o);else for(n in i)Object.prototype.hasOwnProperty.call(i,n)&&(o=str(n,i))&&f.push(quote(n)+(gap?": ":":")+o);return o=0===f.length?"{}":gap?"{\n"+gap+f.join(",\n"+gap)+"\n"+a+"}":"{"+f.join(",")+"}",gap=a,o}}"function"!=typeof Date.prototype.toJSON&&(Date.prototype.toJSON=function(){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+f(this.getUTCMonth()+1)+"-"+f(this.getUTCDate())+"T"+f(this.getUTCHours())+":"+f(this.getUTCMinutes())+":"+f(this.getUTCSeconds())+"Z":null},Boolean.prototype.toJSON=this_value,Number.prototype.toJSON=this_value,String.prototype.toJSON=this_value),"function"!=typeof JSON.stringify&&(meta={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},JSON.stringify=function(t,e,r){var n;if(indent=gap="","number"==typeof r)for(n=0;n<r;n+=1)indent+=" ";else"string"==typeof r&&(indent=r);if((rep=e)&&"function"!=typeof e&&("object"!=typeof e||"number"!=typeof e.length))throw new Error("JSON.stringify");return str("",{"":t})}),"function"!=typeof JSON.parse&&(JSON.parse=function(text,reviver){var j;function walk(t,e){var r,n,o=t[e];if(o&&"object"==typeof o)for(r in o)Object.prototype.hasOwnProperty.call(o,r)&&(void 0!==(n=walk(o,r))?o[r]=n:delete o[r]);return reviver.call(t,e,o)}if(text=String(text),rx_dangerous.lastIndex=0,rx_dangerous.test(text)&&(text=text.replace(rx_dangerous,function(t){return"\\u"+("0000"+t.charCodeAt(0).toString(16)).slice(-4)})),rx_one.test(text.replace(rx_two,"@").replace(rx_three,"]").replace(rx_four,"")))return j=eval("("+text+")"),"function"==typeof reviver?walk({"":j},""):j;throw new SyntaxError("JSON.parse")})}();
-
-function getLayerNames(arg) {
-    var layerNames = [];
+﻿function createOneFramer(index) {
+    app.beginUndoGroup("Creating One Frame");
+    // Get current composition
     var comp = app.project.activeItem;
-    for(var i = 1; i <= comp.numLayers; i++) {
-        layerNames.push(comp.layer(i).name);
+    if (comp && comp instanceof CompItem) {
+        var width = comp.width;
+        var height = comp.height;
+
+        // Creating adjustment layer. Parameters >> RGB, name,
+        var adjustment_layer = comp.layers.addSolid(
+            [0, 0, 0],
+            "1F Layer",
+            width,
+            height,
+            1,
+            0.01
+        );
+        // Set adjustment layer to true
+        adjustment_layer.adjustmentLayer = true;
+        adjustment_layer.startTime = comp.time;
+
+        switch (index) {
+            case "2":
+                mosaicPreset(adjustment_layer);
+                break;
+            case "3":
+                horizontalBlurPreset(adjustment_layer);
+                break;
+            case "4":
+                scanlinePreset(adjustment_layer);
+                break;
+            case "5":
+                ledPreset(adjustment_layer);
+                break;
+            case "6":
+                gammaBlurPreset(adjustment_layer);
+                break;
+            case "7":
+                minimaxHorizontalOffsetPreset(adjustment_layer, width, height);
+                break;
+            default:
+                invertPreset(adjustment_layer);
+                break;
         }
-
-    return JSON.stringify(layerNames);
+    } else {
+        alert("Please select comp layer");
     }
+}
 
-function osCheck() {
-        var os = $.os;
-        var match = os.indexOf("Windows");
-        if(match != (-1)) {
-                var userOS = "PC";
-            } else {
-                 var userOS = "MAC";
-                }
-            return userOS;
+// 1
+function invertPreset(layer) {
+    var invert = layer.Effects.addProperty("ADBE Invert");
+    var tint = layer.Effects.addProperty("ADBE Tint");
+}
+
+// 2
+function scanlinePreset(layer) {
+    try {
+        var scanlines = layer.Effects.addProperty("S_ScanLines");
+        scanlines.property("Lines Frequency").setValue(139.0);
+    } catch (err) {
+        alert("Error: " + err);
     }
+}
+
+// 3
+function horizontalBlurPreset(layer) {
+    var horizontalBlur = layer.Effects.addProperty("ADBE Motion Blur");
+    horizontalBlur.property("Direction").setValue(90);
+    horizontalBlur.property("Blur Length").setValue(80);
+}
+
+// 4
+function gammaBlurPreset(layer) {
+    try {
+        var gammaBlur = layer.Effects.addProperty("BCC Fast Lens Blur");
+        gammaBlur.property("Scale Y").setValue(1.0);
+        gammaBlur.property("Gamma").setValue(405.0);
+    } catch (err) {
+        alert("Error: " + err);
+    }
+}
+// 5
+function ledPreset(layer) {
+    try {
+        var led = layer.Effects.addProperty("BCC LED");
+        led.property("LED Size X").setValue(2.8);
+    } catch (err) {
+        alert("Error: " + err);
+    }
+}
+// 6
+function mosaicPreset(layer) {
+    var mosaic = layer.Effects.addProperty("ADBE Mosaic");
+    mosaic.property("Horizontal Blocks").setValue(150);
+    mosaic.property("Vertical Blocks").setValue(150);
+    mosaic.property("Sharp Colors").setValue(true);
+}
+// 7
+function minimaxHorizontalOffsetPreset(layer, width, height) {
+    var motiontile = layer.Effects.addProperty("ADBE Tile");
+    motiontile.property("Output Width").setValue(200);
+    motiontile.property("Output Height").setValue(200);
+    motiontile.property("Mirror Edges").setValue(true);
+
+    var offset = layer.Effects.addProperty("ADBE Offset");
+    offset.property("Shift Center To").setValue([width / 2 + 300, height / 2]);
+
+    var directionalBlur = layer.Effects.addProperty("BCC Directional Blur");
+
+    var minimax = layer.Effects.addProperty("ADBE Minimax");
+    minimax.property("Radius").setValue(35);
+    minimax.property("Direction").setValue(2);
+}
+
+//createOneFramer();

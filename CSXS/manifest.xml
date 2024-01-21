@@ -3,7 +3,7 @@
 	Version="5.0"
 	ExtensionBundleId="com.s2k.msoneframers"
 	ExtensionBundleVersion="1.0.0"
-	ExtensionBundleName="Extension Testing"
+	ExtensionBundleName="MSONEFRAMERS!"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<ExtensionList>
@@ -46,7 +46,7 @@
 			<UI>
 
 				<Type>Panel</Type>
-				<Menu>Extension Testing</Menu>
+				<Menu>MSONEFRAMERS!</Menu>
 
 				<Geometry>
 					<Size>
