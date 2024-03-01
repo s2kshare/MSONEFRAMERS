@@ -13,3 +13,7 @@ How come this HAS to be a pain? why cant it easier? right?
 ### Below is a demonstration showing its simplicity and its result
 
 ![MSONEFRAMERS](https://github.com/s2kshare/MSONEFRAMERS/assets/118658527/821ff936-90c2-4eb6-b4cb-c1459e3ae8ff)
+
+### TODO:
+* Drag out frames can last 2 frames. I dont know why? I'll fix it soon when I have time
+* I have no idea why some plugins trigger errors
